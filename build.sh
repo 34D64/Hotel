@@ -1,24 +1,20 @@
 #!/usr/bin/env bash
 set -o errexit
 
+# Make sure DJANGO_SETTINGS_MODULE is set
+export DJANGO_SETTINGS_MODULE=project.settings
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Collect static files
 python manage.py collectstatic --no-input
+
+# Apply migrations
 python manage.py migrate
 
-# Auto-create superuser if it doesn't exist
-python - <<END
-import os
-import django
-django.setup()
-from django.contrib.auth.models import User
+# Create superuser (only if not exists)
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); \
+if not User.objects.filter(username='admin').exists(): \
+    User.objects.create_superuser('admin','admin@example.com','admin')" | python manage.py shell
 
-username = "admin"
-password = "admin"
-email = "admin@example.com"
-
-if not User.objects.filter(username=username).exists():
-    User.objects.create_superuser(username=username, email=email, password=password)
-    print("Superuser created.")
-else:
-    print("Superuser already exists.")
-END
