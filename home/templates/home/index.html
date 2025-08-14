@@ -1,0 +1,153 @@
+{% load static %}
+{% load humanize %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <title>هتل بهشت گیلان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            vazir: ["Vazirmatn", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    html {
+      direction: rtl;
+    }
+    body {
+      font-family: Vazirmatn, sans-serif;
+      background-color: #f3f4f6;
+    }
+    .room-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .room-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 20px rgba(16, 185, 129, 0.4);
+    }
+    button:hover {
+      background-color: #047857;
+      box-shadow: 0 4px 15px rgba(5, 150, 105, 0.5);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:focus {
+      outline: 2px solid #22c55e;
+      outline-offset: 2px;
+    }
+    input[type="text"],
+    input[type="date"],
+    select {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 8px #34d399;
+      outline: none;
+    }
+    header h1 {
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .room-card p {
+      transition: color 0.3s ease;
+    }
+    .room-card:hover p {
+      color: #059669;
+    }
+    .errorlist {
+      color: #b91c1c;
+      background-color: #fee2e2;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header
+    class="py-10 bg-gradient-to-r from-emerald-700 shadow-lg text-center text-white to-teal-600"
+  >
+    <h1 class="font-bold text-3xl">هتل بهشت گیلان</h1>
+    <p class="mt-2">اقامتی لوکس و راحت در دل طبیعت زیبای شمال</p>
+  </header>
+
+  <section class="mx-auto px-4 max-w-6xl py-8">
+    <h2 class="font-semibold text-2xl mb-6">اتاق‌های موجود</h2>
+    <div class="gap-6 grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2">
+      {% for room in rooms %}
+      <div class="bg-white overflow-hidden rounded-lg shadow room-card">
+        <img
+          alt="{{ room.name }}"
+          class="h-48 object-cover w-full"
+          src="{{ room.image.url }}"
+        />
+        <div class="p-4">
+          <h3 class="font-bold text-lg">{{ room.name }}</h3>
+          <p class="mt-2 text-gray-600">
+            {{ room.get_room_type_display }} | {{ room.beds }} تخت | {{ room.price|intcomma }} تومان
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="mx-auto px-4 max-w-3xl py-10">
+    <h2 class="font-semibold text-2xl mb-4">رزرو اتاق</h2>
+
+    {% if form.errors %}
+      <div class="mb-4 bg-red-100 p-3 rounded text-red-700">
+        <ul class="list-disc list-inside">
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form method="post" class="bg-white p-6 rounded-xl shadow-lg space-y-6">
+  {% csrf_token %}
+  <div>
+    <label for="id_name" class="block font-medium mb-1">نام رزرو کننده:</label>
+    {{ form.name|add_class:"w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-emerald-400" }}
+  </div>
+  <div>
+    <label for="id_room" class="block font-medium mb-1">انتخاب اتاق:</label>
+    {{ form.room|add_class:"w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-emerald-400" }}
+  </div>
+  <div>
+    <label for="id_checkin" class="block font-medium mb-1">تاریخ ورود:</label>
+    {{ form.checkin|add_class:"w-full p-2 border border-gray-300 rounded-md" }}
+  </div>
+  <div>
+    <label for="id_checkout" class="block font-medium mb-1">تاریخ خروج:</label>
+    {{ form.checkout|add_class:"w-full p-2 border border-gray-300 rounded-md" }}
+  </div>
+  <div class="text-left">
+    <button type="submit" class="font-semibold bg-emerald-700 hover:bg-emerald-800 px-6 py-2 rounded-md text-white">رزرو کن</button>
+  </div>
+</form>
+
+  </section>
+</body>
+</html>

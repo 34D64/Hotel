@@ -1,0 +1,35 @@
+<<<<<<< HEAD
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment folder
+env/
+venv/
+env.bak/
+ENV/
+
+# Django stuff:
+*.sqlite3
+/staticfiles/
+media/
+
+# VSCode
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+=======
+venv/
+__pycache__/
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+*.log
+.env
+>>>>>>> f8dcbca673eb9f35137c00ab5f9569ac4f53d56c
