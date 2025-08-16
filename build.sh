@@ -8,7 +8,9 @@ pip install -r requirements.txt
 python manage.py collectstatic --no-input
 
 # Apply migrations
+python manage.py makemigrations
 python manage.py migrate
+python manage.py makemigrations
 
 # Set DJANGO_SETTINGS_MODULE so Django can run
 export DJANGO_SETTINGS_MODULE=project.settings  # <-- replace your_project
