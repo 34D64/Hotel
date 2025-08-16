@@ -132,6 +132,10 @@
     {{ form.name|add_class:"w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-emerald-400" }}
   </div>
   <div>
+    <label for="id_codemeli" class="block font-medium mb-1">کدملی:</label>
+    {{ form.codemeli|add_class:"w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-emerald-400" }}
+  </div>
+  <div>
     <label for="id_room" class="block font-medium mb-1">انتخاب اتاق:</label>
     {{ form.room|add_class:"w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-emerald-400" }}
   </div>
@@ -144,9 +148,12 @@
     {{ form.checkout|add_class:"w-full p-2 border border-gray-300 rounded-md" }}
   </div>
   <div class="text-left">
-    <button type="submit" class="font-semibold bg-emerald-700 hover:bg-emerald-800 px-6 py-2 rounded-md text-white">رزرو کن</button>
+    <button type="submit" class="font-semibold bg-emerald-700 hover:bg-emerald-800 px-6 py-2 rounded-md text-white">
+      رزرو کن
+    </button>
   </div>
 </form>
+
 
   </section>
 </body>
