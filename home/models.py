@@ -18,7 +18,7 @@ class Room(models.Model):
 
 class Booking(models.Model):
     name = models.CharField("نام رزرو کننده", max_length=100)
-    codemeli = models.CharField("کدملی", max_length=10)  # 👈 اضافه شد
+    codemeli = models.CharField("کدملی", max_length=10 , default=1234567890 , null=True , blank=True)  # 👈 اضافه شد
     room = models.ForeignKey(Room, verbose_name="اتاق", on_delete=models.CASCADE)
     checkin = models.DateField("تاریخ ورود")
     checkout = models.DateField("تاریخ خروج")
