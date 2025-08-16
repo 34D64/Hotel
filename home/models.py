@@ -15,8 +15,10 @@ class Room(models.Model):
     def __str__(self):
         return self.name
 
+
 class Booking(models.Model):
     name = models.CharField("نام رزرو کننده", max_length=100)
+    codemeli = models.CharField("کدملی", max_length=10)  # 👈 اضافه شد
     room = models.ForeignKey(Room, verbose_name="اتاق", on_delete=models.CASCADE)
     checkin = models.DateField("تاریخ ورود")
     checkout = models.DateField("تاریخ خروج")
@@ -25,4 +27,4 @@ class Booking(models.Model):
     authority = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} → {self.room.name}"
+        return f"{self.name} ({self.codemeli}) → {self.room.name}"
