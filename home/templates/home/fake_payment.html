@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>پرداخت رزرو</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
+
+  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">پرداخت رزرو</h2>
+
+    <div class="space-y-3 text-gray-700">
+      <p class="text-lg">
+        اتاق: <span class="font-semibold text-gray-900">{{ booking.room.name }}</span>
+      </p>
+      <p>
+        قیمت کل: <span class="font-semibold">{{ booking.room.price }} تومان</span>
+      </p>
+      <p class="text-xl text-green-600 font-bold">
+        مبلغ قابل پرداخت (۷۰٪): {{ pay_amount }} تومان
+      </p>
+    </div>
+
+    <form method="post" class="mt-8">
+      {% csrf_token %}
+      <button 
+        type="submit" 
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-md transition duration-200">
+        پرداخت
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>

@@ -1,5 +1,4 @@
-# views.py
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.http import HttpResponse
 from .models import Room, Booking
@@ -9,27 +8,24 @@ def index(request):
     today = timezone.localdate()
     form = BookingForm(request.POST or None)
 
-    # Get dates from GET params for filtering available rooms
+    # Get dates
     checkin = request.GET.get('checkin')
     checkout = request.GET.get('checkout')
 
-    # Default to today + 1 day if not provided
+    from datetime import datetime, timedelta
     if not checkin or not checkout:
         checkin = today
-        checkout = today.replace(day=today.day + 1)  # basic 1-day default
+        checkout = today + timedelta(days=1)
     else:
-        # Convert to date objects
-        from datetime import datetime
         checkin = datetime.strptime(checkin, "%Y-%m-%d").date()
         checkout = datetime.strptime(checkout, "%Y-%m-%d").date()
 
-    # Handle booking form submission
+    # booking submit
     if request.method == 'POST' and form.is_valid():
         f_checkin = form.cleaned_data['checkin']
         f_checkout = form.cleaned_data['checkout']
         room = form.cleaned_data['room']
 
-        # Date validation
         if f_checkin < today or f_checkout <= f_checkin:
             form.add_error('checkin', 'تاریخ ورود نامعتبر یا کوچکتر از امروز است')
             form.add_error('checkout', 'تاریخ خروج باید بزرگتر از ورود باشد')
@@ -45,11 +41,11 @@ def index(request):
                 form.add_error('room', 'اتاق در این بازه زمانی رزرو شده است')
             else:
                 booking = form.save(commit=False)
-                booking.is_paid = True  # no payment gateway in this example
+                booking.is_paid = False   # not paid yet
                 booking.save()
-                return HttpResponse("رزرو شما با موفقیت ثبت شد!")
+                # redirect to fake payment page
+                return redirect('fake_payment', booking_id=booking.id)
 
-    # Available rooms based on selected date range
     rooms = Room.objects.exclude(
         id__in=Booking.objects.filter(
             is_paid=True,
@@ -66,6 +62,17 @@ def index(request):
     })
 
 
-def booking_detail(request, booking_id):
+def fake_payment(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    return render(request, 'home/booking_detail.html', {'booking': booking})
+    # calc 70% of price
+    pay_amount = int(booking.room.price * 0.7)
+
+    if request.method == 'POST':
+        booking.is_paid = True
+        booking.save()
+        return redirect('index')  # back to home
+
+    return render(request, 'home/fake_payment.html', {
+        'booking': booking,
+        'pay_amount': pay_amount
+    })
